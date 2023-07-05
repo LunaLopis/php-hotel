@@ -1,5 +1,25 @@
 <?php
 include __DIR__.'/partials/vars.php';
+// copia originale
+$filteredHotels = $hotels;
+
+if (isset($_GET['parking'])) {
+  $tempHotels= [];
+
+     if($_GET['parking'] != 'tutti'){
+        foreach($hotels as $hotel){
+            if(filter_var($_GET['parking'], FILTER_VALIDATE_BOOLEAN) === $hotel['parking']){
+                $tempHotels [] = $hotel;
+            }
+
+        }
+        $filteredHotels= $tempHotels;
+     }
+     else{
+        $filteredHotels= $hotels;
+     }
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +32,22 @@ include __DIR__.'/partials/vars.php';
     <title>Document</title>
 </head>
 <body>
+<div>
+    <form action="index.php" method="GET"  >
+        <div>
+            <label for="parking" class="control-label">Parcheggio</label>
+            <select name="parking" id="parking">
+                <option value="tutti">Tutti</option>
+                <option value="0">No</option>
+                <option value="1">Si</option>
+            </select>
+        </div>
+        <button type="submit">Filtra</button>
+        <button type="reset">Annulla</button>
+    </form>
+</div>
+
+
     <div class="">
     <table class="table">
         <thead>
@@ -24,7 +60,7 @@ include __DIR__.'/partials/vars.php';
             </tr>
         </thead>
             <tbody>
-               <?php foreach ($hotels as $hotel) { ?>
+               <?php foreach ($filteredHotels as $hotel) { ?>
                     <tr>
                     <td><?php echo $hotel['name'];?></td>
                     <td><?php echo $hotel['description'];?></td>
